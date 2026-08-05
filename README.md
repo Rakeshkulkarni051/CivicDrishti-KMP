@@ -199,3 +199,507 @@ The Desktop application is intended for municipal authorities to manage and moni
 The project structure has also been prepared for future iOS support through Kotlin Multiplatform, allowing business logic to be shared while platform-specific implementations remain isolated.
 
 This architecture minimizes code duplication and simplifies long-term maintenance while enabling future expansion to additional platforms.
+
+# Folder Structure
+
+The project follows a modular architecture based on the MVVM (Model–View–ViewModel) design pattern combined with the Repository Pattern. Each layer has a clearly defined responsibility, allowing the application to remain maintainable, scalable, and easy to extend.
+
+```
+Civic-Drishti/
+│
+├── composeApp/
+│   ├── src/
+│   │
+│   ├── commonMain/                    # Shared business logic (Future KMP expansion)
+│   ├── commonTest/                    # Shared test cases
+│   │
+│   ├── androidMain/
+│   │
+│   │   ├── data/
+│   │   │   ├── firebase/
+│   │   │   ├── model/
+│   │   │   └── repository/
+│   │   │
+│   │   ├── ui/
+│   │   │   ├── navigation/
+│   │   │   ├── screens/
+│   │   │   ├── theme/
+│   │   │   └── viewmodels/
+│   │   │
+│   │   ├── MainActivity.kt
+│   │   └── Platform.android.kt
+│   │
+│   ├── iosMain/
+│   └── jvmMain/
+│
+├── iosApp/
+│
+├── gradle/
+├── build.gradle.kts
+├── settings.gradle.kts
+└── README.md
+```
+
+The project has been organized to ensure that user interface components, business logic, cloud communication, and data models remain completely independent of one another.
+
+---
+
+# Module Overview
+
+The application consists of multiple logical modules, each responsible for a specific aspect of the system.
+
+| Module | Responsibility |
+|----------|---------------|
+| data/model | Defines all application data models used throughout the project |
+| data/repository | Handles communication between ViewModels and Firebase |
+| data/firebase | Performs direct Firebase Firestore and Storage operations |
+| ui/screens | Contains all Jetpack Compose user interfaces |
+| ui/viewmodels | Manages screen state and business logic |
+| ui/navigation | Navigation graph and routing between screens |
+| ui/theme | Application colors, typography, and Material theme |
+| MainActivity | Android application entry point |
+| commonMain | Shared KMP business logic (future expansion) |
+| iosMain | iOS platform implementation |
+| jvmMain | Desktop Dashboard implementation |
+
+This modular organization ensures that changes within one layer do not unnecessarily affect the rest of the application.
+
+---
+
+# MVVM Architecture
+
+Civic Drishti follows the **Model–View–ViewModel (MVVM)** architectural pattern to achieve complete separation between presentation logic, business logic, and data access.
+
+```
+               View
+       (Compose Screens)
+
+              │
+
+              ▼
+
+          ViewModel
+
+              │
+
+              ▼
+
+         Repository
+
+              │
+
+              ▼
+
+      Firebase Services
+
+              │
+
+              ▼
+
+      Firestore / Storage
+```
+
+Each layer performs exactly one responsibility.
+
+## View
+
+The View consists entirely of Jetpack Compose screens responsible for displaying information and collecting user interactions.
+
+Examples include:
+
+- Welcome Screen
+- Aadhaar Authentication
+- Home Screen
+- Report Issue Screen
+- Report Tracking
+- Leaderboard
+- User Profile
+
+The View layer never communicates directly with Firebase or performs business logic.
+
+Instead, it observes UI state exposed by ViewModels.
+
+---
+
+## ViewModel
+
+ViewModels act as the bridge between the user interface and the Repository layer.
+
+Responsibilities include:
+
+- Input validation
+- State management
+- Loading indicators
+- Error handling
+- Business logic
+- Invoking Repository functions
+- Exposing observable UI state
+
+Each major screen has its own dedicated ViewModel.
+
+```
+AuthViewModel
+
+↓
+
+ReportViewModel
+
+↓
+
+LeaderboardViewModel
+
+↓
+
+UserProfileViewModel
+```
+
+This separation keeps Compose screens lightweight and focused entirely on rendering UI.
+
+---
+
+## Model
+
+The Model layer represents application entities.
+
+Current models include:
+
+```
+UserData.kt
+
+ReportData.kt
+
+LeaderboardData.kt
+```
+
+Each model is implemented as a Kotlin Data Class.
+
+Example:
+
+```
+data class ReportData(...)
+```
+
+The models simply represent structured application data and contain no business logic.
+
+---
+
+# Why MVVM?
+
+The MVVM architecture was selected because it offers several advantages for medium and large-scale Android applications.
+
+### Separation of Concerns
+
+Every architectural layer performs only one responsibility.
+
+UI handles presentation.
+
+ViewModels manage business logic.
+
+Repositories manage cloud communication.
+
+Firebase handles persistent storage.
+
+---
+
+### Maintainability
+
+Since business logic is isolated from UI components, modifying one layer rarely affects the others.
+
+This significantly reduces maintenance complexity as the application grows.
+
+---
+
+### Scalability
+
+Additional features such as authentication providers, AI classification, push notifications, or REST APIs can be introduced without redesigning the entire architecture.
+
+---
+
+### Testability
+
+Business logic inside ViewModels can be tested independently without rendering user interfaces or communicating with Firebase.
+
+---
+
+# Repository Pattern
+
+The Repository Pattern acts as an abstraction layer between business logic and cloud infrastructure.
+
+Instead of allowing ViewModels to directly communicate with Firebase, all cloud operations are delegated to Repository classes.
+
+```
+Compose Screen
+
+      │
+
+      ▼
+
+ViewModel
+
+      │
+
+      ▼
+
+Repository
+
+      │
+
+      ▼
+
+Firebase
+```
+
+Current repositories include:
+
+```
+AuthRepository.kt
+
+ReportRepository.kt
+
+UserRepository.kt
+
+LeaderboardRepository.kt
+```
+
+Each repository is responsible for a single domain.
+
+For example,
+
+ReportRepository performs operations such as:
+
+- Upload report
+- Retrieve reports
+- Update report status
+- Fetch report history
+
+while UserRepository manages
+
+- User profile
+- Civic coins
+- Impact score
+- User badges
+- Statistics
+
+---
+
+# Why Repository Pattern?
+
+Using a Repository provides multiple architectural benefits.
+
+### Data Source Independence
+
+The UI never knows where the data originates.
+
+Today the repository communicates with Firebase.
+
+Tomorrow it could communicate with
+
+- Django REST APIs
+- Spring Boot
+- Node.js
+- Laravel
+- Local Room Database
+
+without requiring changes to the UI.
+
+---
+
+### Cleaner Code
+
+Firebase-specific code remains isolated inside repositories rather than scattered throughout multiple Compose screens.
+
+---
+
+### Easier Backend Migration
+
+If Firebase is replaced with another backend technology, only Repository implementations require modification.
+
+The rest of the application remains unchanged.
+
+---
+
+# Firebase Cloud Infrastructure
+
+Firebase serves as the backend infrastructure for Civic Drishti.
+
+It provides cloud storage, real-time synchronization, user authentication, and media hosting without requiring custom backend server deployment.
+
+The project currently integrates:
+
+| Firebase Service | Purpose |
+|-----------------|----------|
+| Cloud Firestore | Stores reports, users, leaderboard, and application data |
+| Firebase Storage | Stores uploaded issue photographs |
+| Firebase Authentication | User identity management |
+| Firebase Analytics | Application usage analytics (future integration) |
+
+Firebase was selected because it offers:
+
+- Real-time synchronization
+- Automatic scalability
+- Cloud hosting
+- Minimal backend maintenance
+- Native Android SDK support
+- Tight integration with Kotlin
+
+---
+
+# Firebase Service Layer
+
+The Firebase service layer acts as the lowest abstraction level within the application.
+
+```
+FirebaseService.kt
+```
+
+Responsibilities include:
+
+- Firestore initialization
+- Storage initialization
+- Uploading images
+- Reading documents
+- Writing documents
+- Updating documents
+- Querying collections
+
+Repositories never communicate directly with Firebase SDKs.
+
+Instead, they invoke methods exposed by FirebaseService.
+
+This approach isolates cloud-specific implementation details from the rest of the application.
+
+---
+
+# Firestore Database Design
+
+The application stores structured data using Firebase Cloud Firestore.
+
+The database currently consists of the following primary collections.
+
+```
+users
+
+reports
+
+leaderboard
+```
+
+---
+
+## Users Collection
+
+Stores citizen profile information and contribution statistics.
+
+| Field | Type |
+|--------|------|
+| userId | String |
+| name | String |
+| aadhaarHash | String |
+| city | String |
+| civicCoin | Number |
+| impactScore | Number |
+| trustScore | Double |
+| totalReports | Number |
+| badges | Array |
+| location | Map |
+
+Example:
+
+```
+users
+
+↓
+
+user123
+
+↓
+
+{
+  name
+  city
+  civicCoin
+  impactScore
+  badges
+}
+```
+
+---
+
+## Reports Collection
+
+Stores every civic issue submitted through the mobile application.
+
+| Field | Type |
+|--------|------|
+| reportId | String |
+| userId | String |
+| reportedBy | String |
+| issueType | String |
+| detectedIssue | String |
+| description | String |
+| imageUrl | String |
+| latitude | Double |
+| longitude | Double |
+| location | String |
+| priority | Integer |
+| status | String |
+| createdAt | Timestamp |
+| acknowledgedAt | Timestamp |
+| actionAssignedAt | Timestamp |
+| resolvedAt | Timestamp |
+| civicCoinReward | Integer |
+
+Each report progresses through the following lifecycle.
+
+```
+REPORTED
+
+↓
+
+ACKNOWLEDGED
+
+↓
+
+ACTION_ASSIGNED
+
+↓
+
+RESOLVED
+
+↓
+
+COIN_REWARDED
+```
+
+---
+
+## Leaderboard Collection
+
+Stores contribution rankings for active citizens.
+
+Typical fields include:
+
+- User Name
+- Civic Coins
+- Impact Score
+- Total Reports
+- City Rank
+- Badge
+
+The Leaderboard module retrieves this information to display the highest contributing citizens and encourage civic participation through gamification.
+
+---
+
+# Why Firestore?
+
+Firestore was selected over a traditional SQL database because the project requires:
+
+- Real-time synchronization
+- Cloud-hosted infrastructure
+- Flexible document storage
+- Automatic scalability
+- Offline caching support
+- Tight integration with Firebase Storage
+- Seamless Android SDK support
+
+The document-oriented model also aligns naturally with the application's data structure, where reports, user profiles, and leaderboard entries can be represented as independent collections while remaining easy to query and synchronize.
