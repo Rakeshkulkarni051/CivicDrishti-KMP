@@ -703,3 +703,501 @@ Firestore was selected over a traditional SQL database because the project requi
 - Seamless Android SDK support
 
 The document-oriented model also aligns naturally with the application's data structure, where reports, user profiles, and leaderboard entries can be represented as independent collections while remaining easy to query and synchronize.
+
+
+# Application Workflow
+
+The Civic Drishti application follows a citizen-centric workflow designed to simplify civic issue reporting while ensuring authenticated participation.
+
+The application currently supports Aadhaar-based user registration, location-aware issue reporting, Firebase cloud synchronization, report tracking, and a citizen leaderboard.
+
+The following diagram illustrates the overall application flow.
+
+```
+Application Launch
+        │
+        ▼
+ Splash Screen
+        │
+        ▼
+───────────────────────────────
+Check User Session (30 Days)
+───────────────────────────────
+        │
+ ┌──────┴────────┐
+ │               │
+ ▼               ▼
+Session Exists   No Session
+ │               │
+ ▼               ▼
+Home Screen   Aadhaar Verification
+ │               │
+ │        Validate User
+ │               │
+ │      Existing User?
+ │
+ ┌──────┴────────┐
+ │               │
+ ▼               ▼
+Fetch User     Create User
+ │               │
+ └──────┬────────┘
+        ▼
+     Home Screen
+        │
+        ▼
+Report Civic Issue
+        │
+        ▼
+Capture Image
+        │
+        ▼
+Detect GPS Location
+        │
+        ▼
+Adjust Location on Map
+        │
+        ▼
+Describe Issue
+        │
+        ▼
+Upload Image
+        │
+        ▼
+Save Report to Firestore
+        │
+        ▼
+Report Success
+        │
+        ▼
+Track Report Progress
+        │
+        ▼
+Leaderboard & User Dashboard
+```
+
+The workflow has been intentionally designed to minimize user interaction while collecting sufficient information for civic authorities to process reported issues efficiently.
+
+---
+
+# Feature Workflow
+
+## Splash Screen
+
+The application launches with a branded splash screen.
+
+During this stage the application:
+
+- Initializes Firebase
+- Checks locally stored login session
+- Determines navigation path
+
+If a valid session exists (30-day validity), the user is taken directly to the Home Screen.
+
+Otherwise, the application redirects the user to Aadhaar Verification.
+
+---
+
+## Aadhaar Authentication
+
+The authentication screen collects:
+
+- Citizen Name
+- Aadhaar Number
+
+The Aadhaar number is never stored directly.
+
+Instead, it is converted into a SHA-256 hash before being saved to Firestore.
+
+The authentication flow performs the following checks:
+
+1. Validate input.
+2. Generate Aadhaar hash.
+3. Search Firestore for an existing user.
+4. If user exists, fetch profile.
+5. Otherwise create a new user document.
+6. Store user session locally.
+7. Navigate to Home Screen.
+
+---
+
+## Home Dashboard
+
+The Home Screen acts as the central hub of the application.
+
+From here users can:
+
+- Report a civic issue
+- Track submitted reports
+- View leaderboard rankings
+- Access their profile
+- Monitor civic contribution statistics
+
+---
+
+## Report Issue Workflow
+
+The reporting process consists of multiple stages to ensure accurate issue reporting.
+
+### Step 1 — Capture Image
+
+The application requests Camera permission.
+
+Users capture an image directly using the device camera.
+
+Gallery uploads are intentionally disabled to encourage real-time issue reporting.
+
+Captured images are temporarily stored locally before upload.
+
+---
+
+### Step 2 — Detect Location
+
+The application requests GPS permission.
+
+Using Google's Fused Location Provider, the application automatically retrieves:
+
+- Latitude
+- Longitude
+- Human-readable address
+
+---
+
+### Step 3 — Map Adjustment
+
+After automatic location detection, an interactive Google Map is displayed.
+
+Users can manually adjust the marker to improve location accuracy before submitting the report.
+
+---
+
+### Step 4 — Describe Issue
+
+The user provides a textual description of the reported issue.
+
+This description is intended to support future AI-based issue classification and prioritization.
+
+---
+
+### Step 5 — Upload Report
+
+When the Report button is pressed, the application performs the following sequence.
+
+```
+Capture Image
+
+↓
+
+Upload Image to Firebase Storage
+
+↓
+
+Receive Image URL
+
+↓
+
+Generate Report Object
+
+↓
+
+Store Document in Firestore
+
+↓
+
+Navigate to Success Screen
+```
+
+---
+
+## Track Reports
+
+The Reports module retrieves every report submitted by the currently authenticated user.
+
+Each report displays:
+
+- Image
+- Issue Type
+- Description
+- Location
+- Submission Date
+- Current Status
+
+The current report lifecycle is:
+
+```
+REPORTED
+
+↓
+
+ACKNOWLEDGED
+
+↓
+
+ACTION_ASSIGNED
+
+↓
+
+RESOLVED
+
+↓
+
+COIN_REWARDED
+```
+
+Future versions will include live status updates and push notifications.
+
+---
+
+## User Dashboard
+
+The Profile screen displays the user's civic contribution.
+
+Information includes:
+
+- Aadhaar Verification Status
+- Civic Coins
+- Impact Score
+- Total Reports
+- Earned Badge
+- Rank within the City
+
+All values are retrieved directly from Firestore and updated whenever the user profile changes.
+
+---
+
+## Leaderboard
+
+The Leaderboard promotes community participation through gamification.
+
+Users are ranked based on:
+
+- Civic Impact Score
+- Civic Coins
+- Total Reports
+- Issue Resolution Contributions
+
+Future versions will support city-wise and state-wise rankings.
+
+---
+
+# Screenshots
+
+The following screenshots demonstrate the current user interface of Civic Drishti.
+
+| Screen | Description |
+|----------|-------------|
+| Welcome Screen | Citizen entry point and application introduction |
+| Aadhaar Verification | Identity verification using Aadhaar details |
+| Home Dashboard | Central dashboard displaying reporting options and civic statistics |
+| Report Issue | Capture image, detect location, describe issue, and submit report |
+| Reported Issues | Displays previously submitted reports with tracking status |
+| Leaderboard | Gamified citizen ranking based on civic contribution |
+| User Dashboard | Displays profile information, badges, impact score, and civic coins |
+
+## Application Screens
+
+| Welcome | Aadhaar Verification |
+|-----------|----------------------|
+| ![](screenshots/Wellcome%20Screen.png) | ![](screenshots/Verify%20user.png) |
+
+| Home Dashboard | Report Issue |
+|----------------|--------------|
+| ![](screenshots/Home%20Screen.png) | ![](screenshots/report%20page.png) |
+
+| Report Tracking | Leaderboard |
+|-----------------|-------------|
+| ![](screenshots/Reported%20Issues.png) | ![](screenshots/Leader%20Board.png) |
+
+| User Dashboard |
+|----------------|
+| ![](screenshots/Dashboard.png) |
+
+> Create a folder named `screenshots` in the repository root and place all screenshots inside it using the same filenames shown above.
+
+---
+
+# Build Instructions
+
+## Prerequisites
+
+Before building the application, ensure the following software is installed.
+
+- Android Studio Hedgehog or newer
+- JDK 17 (or compatible version configured for the project)
+- Android SDK
+- Git
+- Kotlin Multiplatform Plugin
+- Google Play Services (for Maps)
+
+---
+
+## Clone Repository
+
+```bash
+git clone https://github.com/Rakeshkulkarni051/CivicDrishti-KMP.git
+
+cd CivicDrishti-KMP
+```
+
+---
+
+## Open Project
+
+Open the project using Android Studio.
+
+Allow Gradle Sync to complete before running the application.
+
+---
+
+## Firebase Configuration
+
+Create a Firebase Project and enable:
+
+- Cloud Firestore
+- Firebase Storage
+- Firebase Authentication
+
+Download the Firebase configuration file.
+
+Place:
+
+```
+google-services.json
+```
+
+inside
+
+```
+composeApp/src/androidMain/
+```
+
+---
+
+## Google Maps Configuration
+
+Create a Google Cloud Platform project.
+
+Enable:
+
+- Maps SDK for Android
+- Geocoding API
+
+Generate an Android API Key.
+
+Add the key inside:
+
+```xml
+<meta-data
+    android:name="com.google.android.geo.API_KEY"
+    android:value="YOUR_GOOGLE_MAPS_API_KEY"/>
+```
+
+located in
+
+```
+composeApp/src/androidMain/AndroidManifest.xml
+```
+
+---
+
+## Sync Gradle
+
+Once Firebase and Maps are configured, synchronize Gradle.
+
+Android Studio automatically downloads all required dependencies.
+
+---
+
+## Run Application
+
+Select an Android device or emulator.
+
+Click **Run**.
+
+or execute:
+
+```bash
+./gradlew installDebug
+```
+
+---
+
+## Build Release APK
+
+```bash
+./gradlew assembleRelease
+```
+
+The generated APK will be located inside:
+
+```
+composeApp/build/outputs/apk/release/
+```
+
+---
+
+# Setup Guide
+
+To run the project successfully, complete the following steps.
+
+### 1. Clone Repository
+
+```bash
+git clone https://github.com/Rakeshkulkarni051/CivicDrishti-KMP.git
+```
+
+---
+
+### 2. Open Android Studio
+
+Open the cloned project.
+
+Allow Gradle to synchronize completely.
+
+---
+
+### 3. Configure Firebase
+
+- Create Firebase Project
+- Enable Firestore
+- Enable Storage
+- Enable Authentication
+- Download `google-services.json`
+- Copy it into:
+
+```
+composeApp/src/androidMain/
+```
+
+---
+
+### 4. Configure Google Maps
+
+- Create Google Cloud API Key
+- Enable Maps SDK for Android
+- Enable Geocoding API
+- Add API key to AndroidManifest
+
+---
+
+### 5. Build the Project
+
+```bash
+./gradlew build
+```
+
+---
+
+### 6. Run on Device
+
+Grant the following permissions when prompted:
+
+- Camera
+- Fine Location
+- Network Access
+
+The application is now ready for use.
+
+---
+
+The project has been structured to separate presentation, business logic, and cloud communication using MVVM and Repository Pattern principles, making it suitable for future expansion to additional Kotlin Multiplatform targets including Desktop and iOS.
