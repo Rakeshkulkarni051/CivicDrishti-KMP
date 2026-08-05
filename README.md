@@ -1008,10 +1008,9 @@ The following screenshots demonstrate the current user interface of Civic Drisht
 |-----------------|-------------|
 | ![Reported Issues](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Reported%20Issues.png) | ![Leaderboard](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Leader%20%20Board.png) |
 
-| User Dashboard |
+| Authority Dashboard [Desktop app]|
 |----------------|
 | ![Dashboard](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Dashboard.png) |
-> Create a folder named `screenshots` in the repository root and place all screenshots inside it using the same filenames shown above.
 
 ---
 
@@ -1200,3 +1199,166 @@ The application is now ready for use.
 ---
 
 The project has been structured to separate presentation, business logic, and cloud communication using MVVM and Repository Pattern principles, making it suitable for future expansion to additional Kotlin Multiplatform targets including Desktop and iOS.
+
+
+# Future Enhancements
+
+The current implementation establishes a scalable foundation for a citizen-centric civic issue reporting platform. The following enhancements are planned as the project evolves toward a production-ready system.
+
+## Artificial Intelligence Integration
+
+- Integrate an on-device TensorFlow Lite model for automatic issue classification from captured images.
+- Classify issues such as potholes, garbage accumulation, broken streetlights, water leakage, and damaged roads.
+- Automatically estimate issue severity and assign reporting priority.
+
+---
+
+## Push Notifications
+
+Integrate Firebase Cloud Messaging (FCM) to notify users when:
+
+- A report is acknowledged.
+- Action has been assigned.
+- An issue has been resolved.
+- Civic coin rewards have been credited.
+
+---
+
+## Real-Time Report Tracking
+
+Enhance the report tracking module with live status synchronization, allowing users to monitor progress without manually refreshing the application.
+
+---
+
+## Offline Support
+
+Introduce local caching using Room Database to allow users to:
+
+- View previously submitted reports offline.
+- Create reports without internet connectivity.
+- Automatically synchronize pending reports once connectivity is restored.
+
+---
+
+## Advanced Analytics
+
+Provide visual dashboards displaying:
+
+- Reports submitted per month.
+- Civic contribution trends.
+- City-wise issue distribution.
+- Personal impact statistics.
+
+---
+
+## Gamification
+
+Expand the Civic Coin ecosystem by introducing:
+
+- Additional citizen badges.
+- Achievement milestones.
+- City and state rankings.
+- Reward redemption system.
+- Community participation challenges.
+
+---
+
+## Kotlin Multiplatform Expansion
+
+Although the current implementation primarily targets Android, the project structure has been designed using Kotlin Multiplatform to support future deployment on:
+
+- Android
+- iOS
+- Desktop (JVM)
+
+The existing architecture minimizes platform-specific dependencies, allowing business logic to be progressively migrated into shared modules.
+
+---
+
+## Security Improvements
+
+Future releases will include:
+
+- End-to-end encryption for sensitive user information.
+- Stronger session management.
+- Role-based access control.
+- Secure backend validation.
+- Rate limiting and abuse prevention.
+
+---
+
+## Continuous Integration
+
+Planned DevOps improvements include:
+
+- GitHub Actions CI/CD
+- Automated testing
+- Static code analysis
+- APK generation
+- Automated releases
+
+---
+
+# Known Limitations
+
+The current implementation represents an academic prototype and therefore includes a few intentional limitations.
+
+- Aadhaar verification is simulated and does not connect to official UIDAI services.
+- Government authority portal is planned but not yet implemented.
+- AI-based issue classification is currently represented by placeholder logic.
+- Push notifications are reserved for future releases.
+- Reward redemption system is not yet available.
+- iOS and Desktop modules are scaffolded but not feature complete.
+
+These limitations have been intentionally documented as future scope for continued development.
+
+---
+
+# License
+
+This project is licensed under the **MIT License**.
+
+Permission is granted to use, modify, distribute, and extend the source code while preserving the original copyright notice.
+
+See the accompanying `LICENSE` file for complete license information.
+
+---
+
+# Author
+
+**Rakesh Kulkarni**
+
+
+Android & Kotlin Multiplatform Developer
+
+GitHub:  
+https://github.com/Rakeshkulkarni051
+
+
+---
+
+# Acknowledgements
+
+The development of Civic Drishti was inspired by the growing need for accessible and technology-driven civic participation platforms.
+
+Special thanks to:
+
+- Google for providing Android, Jetpack Compose, Kotlin Multiplatform, Google Maps Platform, and Firebase services.
+- Firebase for cloud database, storage, and authentication infrastructure.
+- JetBrains for Kotlin and Compose Multiplatform.
+- The Android developer community for open-source libraries, documentation, and best practices.
+- RV Institute of Technology and Management for supporting this academic major project.
+
+---
+
+# Repository
+
+GitHub Repository:
+
+https://github.com/Rakeshkulkarni051/CivicDrishti-KMP
+
+---
+
+Thank you for taking the time to review this project.
+
+Feedback, suggestions, and contributions are always welcome.
