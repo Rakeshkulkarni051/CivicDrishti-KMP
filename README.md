@@ -14,26 +14,29 @@ Rather than functioning as a simple issue reporting application, Civic Drishti a
 
 # Table of Contents
 
-1. Project Overview
-2. Problem Statement
-3. Project Objectives
-4. Technology Stack
-5. System Architecture
-6. High-Level Application Architecture
-7. Cross Platform Architecture
-8. Folder Structure
-9. Module Overview
-10. MVVM Architecture
-11. Repository Pattern
-12. Firebase Cloud Infrastructure
-13. Firestore Database Design
-14. Application Workflow
-15. Screenshots
-16. Setup Instructions
-17. Build Targets
-18. Future Enhancements
-19. License
-20. Author
+1. [Project Overview](#project-overview)
+2. [Problem Statement](#problem-statement)
+3. [Project Objectives](#project-objectives)
+4. [Technology Stack](#technology-stack)
+5. [System Architecture](#system-architecture)
+6. [High-Level Application Architecture](#high-level-application-architecture)
+7. [Cross Platform Architecture](#cross-platform-architecture)
+8. [Folder Structure](#folder-structure)
+9. [Module Overview](#module-overview)
+10. [MVVM Architecture](#mvvm-architecture)
+11. [Repository Pattern](#repository-pattern)
+12. [Firebase Cloud Infrastructure](#firebase-cloud-infrastructure)
+13. [Firestore Database Design](#firestore-database-design)
+14. [Application Workflow](#application-workflow)
+15. [Screenshots](#screenshots)
+16. [Build Instructions](#build-instructions)
+17. [Setup Guide](#setup-guide)
+18. [Future Enhancements](#future-enhancements)
+19. [Known Limitations](#known-limitations)
+20. [License](#license)
+21. [Author](#author)
+22. [Acknowledgements](#acknowledgements)
+23. [Repository](#repository)
 
 ---
 
@@ -179,17 +182,17 @@ This separation improves maintainability, scalability, readability, and testabil
 Civic Drishti is built using Kotlin Multiplatform (KMP), enabling code sharing across multiple platforms while preserving native user experiences.
 
 ```
-                    Kotlin Multiplatform
+                Kotlin Multiplatform
 
-                   Shared Business Logic
-                (Future commonMain Module)
-                          │
-      ┌───────────────────┼───────────────────┐
-      │                   │                   │
-      ▼                   ▼                   ▼
+                  Project Structure
 
- Android App         Desktop Dashboard      iOS App
- Jetpack Compose     Compose Desktop       (Planned)
+          ┌────────────┼────────────┐
+          │            │            │
+
+          ▼            ▼            ▼
+
+   Android App   Desktop Dashboard   iOS
+    (Citizen)      (Authorities)   (Scaffold)
 ```
 
 The Android application currently serves as the primary citizen interface.
