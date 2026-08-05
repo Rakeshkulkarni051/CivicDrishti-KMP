@@ -996,22 +996,21 @@ The following screenshots demonstrate the current user interface of Civic Drisht
 
 ## Application Screens
 
-| Welcome | Aadhaar Verification |
-|-----------|----------------------|
-| ![](screenshots/Wellcome%20Screen.png) | ![](screenshots/Verify%20user.png) |
+| Welcome Screen | Aadhaar Verification |
+|----------------|----------------------|
+| ![Welcome Screen](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Wellcome%20Screen.png) | ![Aadhaar Verification](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Verify%20user.png) |
 
 | Home Dashboard | Report Issue |
 |----------------|--------------|
-| ![](screenshots/Home%20Screen.png) | ![](screenshots/report%20page.png) |
+| ![Home Dashboard](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Home%20Screen.png) | ![Report Issue](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/report%20page.png) |
 
 | Report Tracking | Leaderboard |
 |-----------------|-------------|
-| ![](screenshots/Reported%20Issues.png) | ![](screenshots/Leader%20Board.png) |
+| ![Reported Issues](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Reported%20Issues.png) | ![Leaderboard](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Leader%20%20Board.png) |
 
 | User Dashboard |
 |----------------|
-| ![](screenshots/Dashboard.png) |
-
+| ![Dashboard](https://raw.githubusercontent.com/Rakeshkulkarni051/CivicDrishti-KMP/main/Dashboard.png) |
 > Create a folder named `screenshots` in the repository root and place all screenshots inside it using the same filenames shown above.
 
 ---
